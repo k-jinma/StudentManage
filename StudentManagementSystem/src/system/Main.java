@@ -4,17 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import beans.Student;
 
 public class Main {
 
+	static Connection conn;
+
 	public static void main(String[] args) {
         
         Scanner sc = new Scanner(System.in);
 
         //MySQLに接続する
+        connectDB();
 
         while (true) {
             //生徒管理システムのメニューを表示
@@ -45,6 +49,7 @@ public class Main {
                 case 5:
                     System.out.println("アプリケーションを終了します");
                     sc.close();
+                    disconnectDB();
                     return;
                 default:
                     System.out.println("無効な値です");
@@ -81,9 +86,6 @@ public class Main {
         
         try {
             
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/testdb";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
             
             String sql = "SELECT * FROM testtbl where id = '"+ id + "'";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
@@ -110,14 +112,9 @@ public class Main {
     public static void listStudent(){
         System.out.println("生徒の一覧表示");
 
-        try {
+        try {           
             
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/testdb";
-            Connection conn = DriverManager.getConnection(url, "root", "root");
-            
-            
-            String sql = "SELECT * FROM testtbl = delflg = 0";
+            String sql = "SELECT * FROM testtbl";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             
@@ -135,6 +132,33 @@ public class Main {
             e.printStackTrace();
         }
         
+    }
+    
+    /**
+     * DBに接続する
+     */
+    public static void connectDB() {
+    	
+        try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+	        String url = "jdbc:mysql://localhost:3306/testdb";
+	        conn = DriverManager.getConnection(url, "root", "root");
+	        
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+    }
+    
+    public static void disconnectDB() {
+    	try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+    	
     }
 
 }
