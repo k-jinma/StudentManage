@@ -12,6 +12,9 @@ import beans.Student;
 public class Main {
 
 	static Connection conn;
+	static final String userName = "root";
+	static final String password = "root";
+	static String dbName = "testdb";
 
 	public static void main(String[] args) {
         
@@ -141,8 +144,8 @@ public class Main {
     	
         try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-	        String url = "jdbc:mysql://localhost:3306/testdb";
-	        conn = DriverManager.getConnection(url, "root", "root");
+	        String url = "jdbc:mysql://localhost:3306/" + dbName;
+	        conn = DriverManager.getConnection(url, userName, password);
 	        
 		} catch (Exception e) {
 			// TODO 自動生成された catch ブロック
@@ -151,6 +154,9 @@ public class Main {
 
     }
     
+    /**
+     * DBを切断する
+     */
     public static void disconnectDB() {
     	try {
 			conn.close();
