@@ -83,26 +83,29 @@ public class Main {
     //生徒の検索
     public static void searchStudent(){
         System.out.println("生徒の検索");
-                
+        System.out.print("検索したい生徒の名前を入力してください：");        
         Scanner sc = new Scanner(System.in);
-        String id = sc.next();
+        String findName = sc.next();
         
         try {
             
-            
-            String sql = "SELECT * FROM testtbl where id = '"+ id + "'";
+            String sql = "SELECT * FROM testtbl where name like ?";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + findName + "%");
             ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                System.out.print(rs.getString("id") + " ");
-                System.out.print(rs.getString("name") + " ");
-                System.out.print(rs.getInt("age") + " ");
-                System.out.print(rs.getString("address") + " ");
-                System.out.print(rs.getString("createdat") + " ");
-                System.out.print(rs.getString("deletedat") + " ");
-                System.out.println(rs.getInt("delflg") + " ");
-            }
+			if (!rs.next()) {
+				System.out.println("該当する生徒はいません");
+			}else {
+				do {
+					System.out.print(rs.getString("id") + " ");
+					System.out.print(rs.getString("name") + " ");
+					System.out.print(rs.getInt("age") + " ");
+					System.out.print(rs.getString("address") + " ");
+					System.out.print(rs.getString("createdat") + " ");
+					System.out.print(rs.getString("deletedat") + " ");
+					System.out.println(rs.getInt("delflg") + " ");
+				}while (rs.next());
+			}
 
         } catch (Exception e) {
             e.printStackTrace();
