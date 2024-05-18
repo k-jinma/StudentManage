@@ -10,14 +10,13 @@ import java.util.Scanner;
 public class Main {
 
 	static Connection conn;
+	static Scanner sc = new Scanner(System.in);
 	
 	static final String userName = "root";
 	static final String password = "root";
 	static String dbName = "testdb";
 
 	public static void main(String[] args) {
-		
-        Scanner sc = new Scanner(System.in);
 
         //MySQLに接続する
         connectDB();
@@ -67,7 +66,6 @@ public class Main {
     public static void addStudent(){
     	
         System.out.println("生徒の追加");
-        Scanner sc = new Scanner(System.in);
         
         System.out.print("IDを入力してください：");
         String id = sc.next();
@@ -105,7 +103,6 @@ public class Main {
     public static void deleteStudent(){
         System.out.println("生徒の削除");
         System.out.print("削除したい生徒のIDを入力してください：");
-        Scanner sc = new Scanner(System.in);
         String deleteId = sc.next();
 
         try {
@@ -131,7 +128,6 @@ public class Main {
     public static void searchStudent(){
         System.out.println("生徒の検索");
         System.out.print("検索したい生徒の名前を入力してください：");        
-        Scanner sc = new Scanner(System.in);
         String name = sc.next();
         System.out.print("年齢を入力してください：");        
         String age = sc.next();
