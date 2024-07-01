@@ -27,7 +27,9 @@ public class Main {
             System.out.println("2.生徒の削除");
             System.out.println("3.生徒の検索");
             System.out.println("4.生徒の一覧表示");
-            System.out.println("5.終了");
+            System.out.println("5.テストの実施");
+            System.out.println("6.テスト結果を表示");
+            System.out.println("9.終了");
 
             //入力を受け付ける
             System.out.println("メニュー番号を入力してください");
@@ -48,10 +50,17 @@ public class Main {
                     sm.listStudent();
                     break;
                 case 5:
-                    System.out.println("アプリケーションを終了します");
-                    sc.close();
-                    disconnectDB();
-                    return;
+					sm.doTest();
+					break;
+                case 6:
+					sm.showTestResult();
+					break;
+                case 9:
+                	System.out.println("アプリケーションを終了します");
+                	sc.close();
+                	disconnectDB();
+                	return;
+					
                 default:
                     System.out.println("無効な値です");
                     break;

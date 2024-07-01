@@ -60,7 +60,7 @@ public class StudentManager {
         String deleteId = sc.next();
 
         try {
-            String sql = "DELETE FROM testtbl WHERE id = ?";
+            String sql = "UPDATE testtbl SET delflg = 1 WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, deleteId);
             
@@ -85,10 +85,22 @@ public class StudentManager {
         String name = sc.next();
         System.out.print("年齢を入力してください：");        
         String age = sc.next();
+        System.out.print("退学者も表示しますか？(y/n)：");
+        String flg = sc.next();
+        
+        String sql;
+        if (flg.equals("y")) {
+        	// 退学者も表示
+        	sql = "SELECT * FROM testtbl where name like ? and age = ?";
+        	
+        }else {
+        	// 退学者を表示しない
+        	sql = "SELECT * FROM testtbl where name like ? and age = ? and delflg = 0";
+        }
         
         try {
             
-            String sql = "SELECT * FROM testtbl where name like ? and age = ?";
+            
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             pstmt.setString(1, "%" + name + "%");
             pstmt.setString(2, age);
@@ -121,7 +133,7 @@ public class StudentManager {
 
         try {           
         	
-            String sql = "SELECT * FROM testtbl";
+            String sql = "SELECT * FROM testtbl WHERE delflg = 0";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             
@@ -131,8 +143,8 @@ public class StudentManager {
                 System.out.print(rs.getInt("age") + " ");
                 System.out.print(rs.getString("address") + " ");
                 System.out.print(rs.getString("createdat") + " ");
-                System.out.print(rs.getString("deletedat") + " ");
-                System.out.println(rs.getInt("delflg") + " ");
+                System.out.println(rs.getString("deletedat") + " ");
+                //System.out.println(rs.getInt("delflg") + " ");
             }
 
         } catch (Exception e) {
@@ -140,5 +152,130 @@ public class StudentManager {
         }
         
     }
+
+    //テスト結果の表示
+	public void showTestResult() {
+		System.out.println("テスト結果の表示");
+		
+		System.out.print("試験名：");
+		String testName = sc.nextLine();
+		
+		System.out.print("試験No：");
+		String testNo = sc.nextLine();
+		
+		
+		try {
+			String sql = "SELECT * FROM shiken where subject_name = ? and subject_no = ? order by gakusei_id";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, testName);
+			pstmt.setString(2, testNo);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (!rs.next()) {
+                System.out.println("該当する試験はありません");
+			}else {
+				System.out.println("実施日：" + rs.getString("test_date"));
+				System.out.println("学生No\t点数");
+                do {
+                    System.out.print(rs.getString("gakusei_id") + " ");
+                    System.out.println(rs.getString("score") + " ");
+                }while (rs.next());
+            }
+			
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void doTest() {
+		System.out.println("テストの実施");
+		
+		System.out.print("試験名：");
+		String testName = sc.nextLine();
+		
+		System.out.print("試験No：");
+		String testNo = sc.nextLine();
+		
+		//試験が存在するか確認
+		String flg = "y";
+		try {
+			if (existTest(testName, testNo)) {
+				System.out.println("試験が存在します");
+				return;
+			}else {
+				do {
+					//学生NOとスコアを入力する
+					System.out.println("学生NOとスコアを入力してください");
+					System.out.print("学生NO：");
+					String studentNo = sc.nextLine();
+					System.out.print("スコア：");
+					String score = sc.nextLine();
+					
+					//学生NOが存在するか確認
+					String sql = "SELECT * FROM testtbl where id = ?";
+					PreparedStatement pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, studentNo);
+					
+					ResultSet rs = pstmt.executeQuery();
+					
+					if (!rs.next()) {
+						System.out.println("学生NOが存在しません");
+						System.out.print("続けますか？(y/n):");
+						flg = sc.nextLine();
+						continue;
+					}
+					
+					//テスト結果を登録する
+					sql = "INSERT INTO shiken (subject_name, subject_no, gakusei_id, score) VALUES(?,?,?,?)";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, testName);
+					pstmt.setString(2, testNo);
+					pstmt.setString(3, studentNo);
+					pstmt.setString(4, score);
+					
+					int rowsAffected = pstmt.executeUpdate();
+					
+					if (rowsAffected > 0) {
+	                    System.out.println("テスト結果を登録しました");
+	                    System.out.print("続けますか？(y/n):");
+	                    flg = sc.nextLine();
+	                    
+					}else {
+						System.out.println("テスト結果の登録に失敗しました");
+						return;
+					}
+				}while(flg.equals("y"));
+			
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+	private boolean existTest(String testName, String testNo) {
+		try {
+			String sql = "SELECT * FROM shiken where subject_name = ? and subject_no = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, testName);
+			pstmt.setString(2, testNo);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (!rs.next()) {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+    
+    
+    
+    
     
 }
