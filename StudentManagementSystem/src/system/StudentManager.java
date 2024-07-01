@@ -32,7 +32,7 @@ public class StudentManager {
         
         
         try {
-            String sql = "insert into testtbl (id, name, age, address, delflg) values(?,?,?,?,0);";
+            String sql = "insert into student (id, name, age, address, delflg) values(?,?,?,?,0);";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, id);
@@ -60,7 +60,7 @@ public class StudentManager {
         String deleteId = sc.next();
 
         try {
-            String sql = "UPDATE testtbl SET delflg = 1 WHERE id = ?";
+            String sql = "UPDATE student SET delflg = 1 WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, deleteId);
             
@@ -91,11 +91,11 @@ public class StudentManager {
         String sql;
         if (flg.equals("y")) {
         	// 退学者も表示
-        	sql = "SELECT * FROM testtbl where name like ? and age = ?";
+        	sql = "SELECT * FROM student where name like ? and age = ?";
         	
         }else {
         	// 退学者を表示しない
-        	sql = "SELECT * FROM testtbl where name like ? and age = ? and delflg = 0";
+        	sql = "SELECT * FROM student where name like ? and age = ? and delflg = 0";
         }
         
         try {
@@ -133,7 +133,7 @@ public class StudentManager {
 
         try {           
         	
-            String sql = "SELECT * FROM testtbl WHERE delflg = 0";
+            String sql = "SELECT * FROM student WHERE delflg = 0";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             
@@ -142,8 +142,8 @@ public class StudentManager {
                 System.out.print(rs.getString("name") + " ");
                 System.out.print(rs.getInt("age") + " ");
                 System.out.print(rs.getString("address") + " ");
-                System.out.print(rs.getString("createdat") + " ");
-                System.out.println(rs.getString("deletedat") + " ");
+                System.out.print(rs.getString("createdate") + " ");
+                System.out.println(rs.getString("deletedate") + " ");
                 //System.out.println(rs.getInt("delflg") + " ");
             }
 
@@ -215,7 +215,7 @@ public class StudentManager {
 					String score = sc.nextLine();
 					
 					//学生NOが存在するか確認
-					String sql = "SELECT * FROM testtbl where id = ?";
+					String sql = "SELECT * FROM student where id = ?";
 					PreparedStatement pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, studentNo);
 					
