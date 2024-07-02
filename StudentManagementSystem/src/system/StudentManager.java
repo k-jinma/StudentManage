@@ -214,7 +214,7 @@ public class StudentManager {
 					System.out.print("スコア：");
 					String score = sc.nextLine();
 					
-					//学生NOが存在するか確認
+					//学生NOが学生表に存在するか確認
 					String sql = "SELECT * FROM student where id = ?";
 					PreparedStatement pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, studentNo);
@@ -227,6 +227,24 @@ public class StudentManager {
 						flg = sc.nextLine();
 						continue;
 					}
+					
+					//学生NOが試験に登録済か
+					sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no = ? AND gakusei_id = ?";
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, testName);
+					pstmt.setString(2, testNo);
+					pstmt.setString(3, studentNo);
+					
+					rs = pstmt.executeQuery();
+					
+					if (rs.next()) {
+						System.out.println("すでにスコアが記録されています");
+						System.out.print("続けますか？(y/n):");
+						flg = sc.nextLine();
+						continue;
+					}
+					
 					
 					//テスト結果を登録する
 					sql = "INSERT INTO shiken (subject_name, subject_no, gakusei_id, score) VALUES(?,?,?,?)";
