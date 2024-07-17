@@ -291,6 +291,125 @@ public class StudentManager {
 		}
 		return true;
 	}
+
+	// テストを修正する
+	public void updateTest() {
+		System.out.print("科目名：");
+		String kamoku = sc.nextLine();
+		System.out.print("試験No:");
+		String no = sc.nextLine();
+		
+		String sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no = ?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, kamoku);
+			pstmt.setString(2, no);
+			
+			ResultSet rs = pstmt.executeQuery();
+			System.out.println("-----------------------------------------");
+			System.out.println("id\t学生番号\t試験名 試験No 得点 実施日   ");
+			System.out.println("-----------------------------------------");
+			while( rs.next() ) {
+				System.out.print( rs.getInt("id") );
+				System.out.print("\t");
+				System.out.print( rs.getString("gakusei_id") );
+				System.out.print("\t\t");
+				System.out.print( rs.getString("subject_name") );
+				System.out.print(" ");
+				System.out.print( rs.getInt("subject_no") );
+				System.out.print(" ");
+				System.out.print( rs.getInt("score") );
+				System.out.print(" ");
+				System.out.println( rs.getString("test_date") );
+				
+			}
+			System.out.println("-----------------------------------------");
+			
+			System.out.print("修正id：");
+			String id = sc.nextLine();
+			
+			System.out.println("修正項目");
+			System.out.println("1.学生番号");
+			System.out.println("2.試験名");
+			System.out.println("3.試験No");
+			System.out.println("4.得点");
+			System.out.println("5.実施日");
+			
+			// SQLをもう1回実行
+			rs = pstmt.executeQuery();
+			
+			String dbId = "";
+			String gakuseiId = "";
+			
+			
+			// 指定されたidの学生番号を取得する
+			while(rs.next()) {
+				dbId = String.valueOf( rs.getInt("id") );
+				if( dbId.equals(id) ) {
+					gakuseiId = rs.getString("gakusei_id");	//学生番号
+					
+					break;
+				}
+			}
+			
+			if( dbId.isEmpty() ) {
+				System.out.println("そのIDはありません");
+				
+			}else {
+				
+				// メニューの番号を入力
+				String inputNo = sc.nextLine();
+				
+				switch (inputNo) {
+				
+				// 学生番号の修正
+				case "1": 
+					// > 学生番号（240001）→：240005
+					System.out.print("学生番号(" + gakuseiId +")→：");	
+					String updateGakuseiID = sc.nextLine();
+					
+					String updateSql = "UPDATE shiken SET gakusei_id = ? WHERE id = ?";
+					
+		            pstmt = conn.prepareStatement(updateSql);
+		            pstmt.setString(1, updateGakuseiID);
+		            pstmt.setString(2, dbId);
+
+		            int rowsAffected = pstmt.executeUpdate();
+					System.out.println("修正しました");
+					
+					break;
+				
+				//試験名の修正
+				case "2":
+					
+					break;
+				
+				//試験Noの修正
+				case "3":
+					
+					break;
+				
+				//得点の修正
+				case "4":
+					
+					break;
+					
+				//実施日の修正
+				case "5":
+					
+					break;
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
     
     
     

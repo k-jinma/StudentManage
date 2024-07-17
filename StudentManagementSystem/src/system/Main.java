@@ -24,12 +24,14 @@ public class Main {
         while (true) {
             //生徒管理システムのメニューを表示
             System.out.println("1.生徒の追加");
+            //生徒の修正
             System.out.println("2.生徒の削除");
             System.out.println("3.生徒の検索");
             System.out.println("4.生徒の一覧表示");
             System.out.println("5.テストの実施");
-            //テストを修正する
-            //テストを削除する
+            //7.テストを修正する
+            System.out.println("7.テストを修正する");
+            //8.テストを削除する
             System.out.println("6.テスト結果を表示");
             
             System.out.println("9.終了");
@@ -58,6 +60,9 @@ public class Main {
                 case 6:
 					sm.showTestResult();
 					break;
+                case 7:
+                	sm.updateTest();
+                	break;
                 case 9:
                 	System.out.println("アプリケーションを終了します");
                 	sc.close();
