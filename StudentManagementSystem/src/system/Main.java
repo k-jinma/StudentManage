@@ -29,10 +29,9 @@ public class Main {
             System.out.println("3.生徒の検索");
             System.out.println("4.生徒の一覧表示");
             System.out.println("5.テストの実施");
-            //7.テストを修正する
-            System.out.println("7.テストを修正する");
-            //8.テストを削除する
-            System.out.println("6.テスト結果を表示");
+            System.out.println("6.テストを修正する");
+            System.out.println("7.テストを削除する");
+            System.out.println("8.テスト結果を表示");
             
             System.out.println("9.終了");
 
@@ -58,11 +57,14 @@ public class Main {
 					sm.doTest();
 					break;
                 case 6:
-					sm.showTestResult();
-					break;
-                case 7:
                 	sm.updateTest();
                 	break;
+                case 7:
+                	sm.deleteTest();
+                	break;
+                case 8:
+					sm.showTestResult();
+					break;
                 case 9:
                 	System.out.println("アプリケーションを終了します");
                 	sc.close();

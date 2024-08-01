@@ -410,6 +410,51 @@ public class StudentManager {
 		
 		
 	}
+
+	// テストを削除する
+	public void deleteTest() {
+		String sql = "SELECT subject_name, subject_no FROM shiken GROUP BY subject_no, subject_name";
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+
+			System.out.println("-----------------------------------------");
+			System.out.println("試験名\t\t試験No");
+			System.out.println("-----------------------------------------");
+			while (rs.next()) {
+				
+				System.out.print(rs.getString("subject_name"));
+				System.out.print("\t\t");
+				System.out.print(rs.getInt("subject_no"));
+				System.out.println();
+			}
+			System.out.println("-----------------------------------------");
+
+			System.out.print("削除する試験名：");
+			String subject_name = sc.nextLine();
+			
+			System.out.print("削除する試験No：");
+			int subject_no = Integer.parseInt( sc.nextLine() );
+
+			sql = "DELETE FROM shiken WHERE subject_name = ? AND subject_no = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, subject_name);
+			pstmt.setInt(2, subject_no);
+
+			int rowsAffected = pstmt.executeUpdate();
+
+			if (rowsAffected > 0) {
+				System.out.println("削除しました");
+			} else {
+				System.out.println("削除に失敗しました");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
     
     
     
