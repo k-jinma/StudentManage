@@ -32,6 +32,7 @@ public class Main {
             System.out.println("6.テストを修正する");
             System.out.println("7.テストを削除する");
             System.out.println("8.テスト結果を表示");
+            //10
             
             System.out.println("9.終了");
 
@@ -43,7 +44,7 @@ public class Main {
             switch(menu){
                 case 1:
                     sm.addStudent();
-                    break;
+                    break;        	
                 case 2:
                     sm.deleteStudent();
                     break;
@@ -70,7 +71,8 @@ public class Main {
                 	sc.close();
                 	disconnectDB();
                 	return;
-					
+                	
+                	
                 default:
                     System.out.println("無効な値です");
                     break;

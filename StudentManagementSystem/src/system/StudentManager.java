@@ -294,6 +294,11 @@ public class StudentManager {
 
 	// テストを修正する
 	public void updateTest() {
+		
+		int rowsAffected = 0;
+		String updateSql;
+		
+		
 		System.out.print("科目名：");
 		String kamoku = sc.nextLine();
 		System.out.print("試験No:");
@@ -341,14 +346,16 @@ public class StudentManager {
 			
 			String dbId = "";
 			String gakuseiId = "";
+			String subjectName ="";
+			int subjectNo = 0;
 			
-			
-			// 指定されたidの学生番号を取得する
+			// 指定されたidの情報を取得する
 			while(rs.next()) {
 				dbId = String.valueOf( rs.getInt("id") );
 				if( dbId.equals(id) ) {
 					gakuseiId = rs.getString("gakusei_id");	//学生番号
-					
+					subjectName = rs.getString("subject_name"); //試験名
+					subjectNo = rs.getInt("subject_no"); //試験No
 					break;
 				}
 			}
@@ -369,25 +376,77 @@ public class StudentManager {
 					System.out.print("学生番号(" + gakuseiId +")→：");	
 					String updateGakuseiID = sc.nextLine();
 					
-					String updateSql = "UPDATE shiken SET gakusei_id = ? WHERE id = ?";
+					// 学生が存在するかチェック
+					String gakuseiSql = "SELECT * FROM student WHERE id = ?";
+					pstmt = conn.prepareStatement(gakuseiSql);
+					pstmt.setString(1, updateGakuseiID);
+					if( !pstmt.executeQuery().next() ) {
+						System.out.println("学生が存在しません");
+						break;
+					}
+										
+					
+					updateSql = "UPDATE shiken SET gakusei_id = ? WHERE id = ?";
 					
 		            pstmt = conn.prepareStatement(updateSql);
 		            pstmt.setString(1, updateGakuseiID);
 		            pstmt.setString(2, dbId);
 
-		            int rowsAffected = pstmt.executeUpdate();
+		            rowsAffected = pstmt.executeUpdate();
 					System.out.println("修正しました");
 					
 					break;
 				
 				//試験名の修正
 				case "2":
+					System.out.println("試験名：" );
+					subjectName = sc.nextLine();
+					
+					// 変更する試験名とIDが存在するか
+					sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no =?";
+		            pstmt = conn.prepareStatement(sql);
+		            pstmt.setString(1, subjectName);
+		            pstmt.setInt(2, subjectNo);
+					if( pstmt.executeQuery().next() ) {
+						System.out.println("同一試験が存在します");
+						break;
+					}
+					
+					
+					updateSql = "UPDATE shiken SET subject_name = ? WHERE id = ?";
+		            pstmt = conn.prepareStatement(updateSql);
+		            pstmt.setString(1, subjectName);
+		            pstmt.setString(2, dbId);
+
+		            rowsAffected = pstmt.executeUpdate();
+					System.out.println("修正しました");
+					
 					
 					break;
 				
 				//試験Noの修正
 				case "3":
+					System.out.println("試験No：" );
+					subjectNo = Integer.parseInt(sc.nextLine());
 					
+					// 変更する試験名とIDが存在するか
+					sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no =?";
+		            pstmt = conn.prepareStatement(sql);
+		            pstmt.setString(1, subjectName);
+		            pstmt.setInt(2, subjectNo);
+					if( pstmt.executeQuery().next() ) {
+						System.out.println("同一試験が存在します");
+						break;
+					}
+					
+					
+					String updataSql = "UPDATE shiken SET subject_no = ? WHERE id = ?";
+		            pstmt = conn.prepareStatement(updataSql);
+		            pstmt.setString(1, subjectName);
+		            pstmt.setString(2, dbId);
+
+		            rowsAffected = pstmt.executeUpdate();
+					System.out.println("修正しました");
 					break;
 				
 				//得点の修正
