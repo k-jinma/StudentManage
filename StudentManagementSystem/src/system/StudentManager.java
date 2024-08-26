@@ -190,6 +190,7 @@ public class StudentManager {
 		
 	}
 
+	// テストを実施する
 	public void doTest() {
 		System.out.println("テストの実施");
 		
@@ -272,24 +273,6 @@ public class StudentManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-    
-	private boolean existTest(String testName, String testNo) {
-		try {
-			String sql = "SELECT * FROM shiken where subject_name = ? and subject_no = ?";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, testName);
-			pstmt.setString(2, testNo);
-
-			ResultSet rs = pstmt.executeQuery();
-
-			if (!rs.next()) {
-				return false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return true;
 	}
 
 	// テストを修正する
@@ -452,6 +435,7 @@ public class StudentManager {
 				//得点の修正
 				case "4":
 					
+
 					break;
 					
 				//実施日の修正
@@ -515,8 +499,95 @@ public class StudentManager {
 		
 	}
     
-    
-    
-    
+	// 生徒情報を修正する
+	public void updateStudent() {
+		
+		// 生徒一覧を表示する
+		String sql = "SELECT id, name, age, address FROM student WHERE delflg = 0";
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql);
+		
+			ResultSet rs = pstmt.executeQuery();
+			System.out.println("-----------------------------------------");
+			System.out.println("id\t\t氏名\t\t年齢\t住所   ");
+			System.out.println("-----------------------------------------");
+			while( rs.next() ) {
+				System.out.print( rs.getInt("id") );
+				System.out.print("\t");
+				System.out.print( rs.getString("name") );
+				System.out.print("\t\t");
+				System.out.print( rs.getInt("age") );
+				System.out.print(" ");
+				System.out.println( rs.getString("address") );
+
+			}
+			System.out.println("-----------------------------------------");
+			
+			System.out.print("修正id：");
+			String id = sc.nextLine();
+			
+			System.out.println("修正項目");
+			System.out.println("1.id(学生番号)");
+			System.out.println("2.氏名");
+			System.out.println("3.年齢");
+			System.out.println("4.住所");
+			
+			String no = sc.nextLine();
+			switch (no) {
+			
+				case "3":
+					
+					sql = " select age from student where id = ?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, id);
+					rs = pstmt.executeQuery();
+					while( rs.next() ) {
+						System.out.print( rs.getString("age")  + "->");
+						
+					}
+					
+					
+					String age = sc.nextLine();
+					
+					sql = "update student set age = ? where id = ?";
+	
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, age);
+					pstmt.setString(2, id);
+					
+					int cnt = pstmt.executeUpdate();
+					break;
+			}
+
+			
+			
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	// 試験が存在するか確認する
+	private boolean existTest(String testName, String testNo) {
+		try {
+			String sql = "SELECT * FROM shiken where subject_name = ? and subject_no = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, testName);
+			pstmt.setString(2, testNo);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (!rs.next()) {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
     
 }
