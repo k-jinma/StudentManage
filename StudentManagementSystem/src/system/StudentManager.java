@@ -547,7 +547,6 @@ public class StudentManager {
 						
 					}
 					
-					
 					String age = sc.nextLine();
 					
 					sql = "update student set age = ? where id = ?";
