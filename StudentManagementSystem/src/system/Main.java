@@ -26,14 +26,14 @@ public class Main {
         	System.out.println("1.生徒の一覧表示"); // ○
         	System.out.println("2.生徒の検索"); // ○
             System.out.println("3.生徒の追加"); // ○
-            System.out.println("4.生徒の修正"); // ✕
+            System.out.println("4.生徒の修正"); // 〇
             System.out.println("5.生徒の削除");	// ○
             
-            System.out.println("テスト一覧表示"); // ✕
-            System.out.println("テストの検索"); // ✕
+            System.out.println("6.テスト一覧表示"); // 〇
+            System.out.println("7.テストの検索"); // △　２回目入力 scannerバグ
             System.out.println("8.テストの実施"); // ○
             System.out.println("9.テスト結果を表示"); // ○
-            System.out.println("10.テストを修正する"); // △
+            System.out.println("10.テストを修正する"); // 〇
             System.out.println("11.テストを削除する"); // ○
             
             System.out.println("99.終了");
@@ -61,10 +61,10 @@ public class Main {
                     break;
                     
 				case 6:
-					//sm.listTest();
+					sm.listTest();
 					break;
 				case 7:
-					//sm.showTest();
+					sm.showTest();
 					break;
                 case 8:
 					sm.doTest();
