@@ -15,6 +15,8 @@ public class Main {
 	static String dbName = "testdb";
 
 	public static void main(String[] args) {
+		
+		//テストコメント
 
         //MySQLに接続する
         connectDB();
