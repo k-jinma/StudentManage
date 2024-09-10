@@ -720,6 +720,7 @@ public class StudentManager {
         
         System.out.print("試験No->");
         int testNo = sc.nextInt();
+        sc.nextLine();
         
 
         try {           
