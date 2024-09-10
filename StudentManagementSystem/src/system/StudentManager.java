@@ -137,16 +137,26 @@ public class StudentManager {
             String sql = "SELECT * FROM student WHERE delflg = 0";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
-            
+
+            System.out.println("--------------------------------------------------------------------------");
+            System.out.printf("%-10s%-10s%-5s%-10s%-20s%-20s\n", "id", "name", "age", "address", "createdate", "deletedate");
+            System.out.println("--------------------------------------------------------------------------");
             while (rs.next()) {
-                System.out.print(rs.getString("id") + " ");
-                System.out.print(rs.getString("name") + " ");
-                System.out.print(rs.getInt("age") + " ");
-                System.out.print(rs.getString("address") + " ");
-                System.out.print(rs.getString("createdate") + " ");
-                System.out.println(rs.getString("deletedate") + " ");
+            	System.out.printf("%-10s", rs.getString("id"));
+            	System.out.printf("%-10s", rs.getString("name"));
+            	System.out.printf("%-5d", rs.getInt("age"));
+            	System.out.printf("%-10s", rs.getString("address"));
+            	System.out.printf("%-20s", rs.getString("createdate"));
+            	System.out.printf("%-20s\n", rs.getString("deletedate"));
+//                System.out.print(rs.getString("id") + " ");
+//                System.out.print(rs.getString("name") + " ");
+//                System.out.print(rs.getInt("age") + " ");
+//                System.out.print(rs.getString("address") + " ");
+//                System.out.print(rs.getString("createdate") + " ");
+//                System.out.println(rs.getString("deletedate") + " ");
                 //System.out.println(rs.getInt("delflg") + " ");
             }
+            System.out.println("--------------------------------------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
