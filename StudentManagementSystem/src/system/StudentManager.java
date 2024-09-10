@@ -48,10 +48,13 @@ public class StudentManager {
             } else {
                 System.out.println("生徒が追加できませんでした");
             }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.err.println("IDが重複しています。もう一度入力してください。");
+            
         } catch (SQLException e) {
-            e.printStackTrace();
+			System.out.println("データ操作中にエラーが発生しました");
+
         }
-        
     }
 
     //生徒の削除
@@ -110,15 +113,27 @@ public class StudentManager {
 			if (!rs.next()) {
 				System.out.println("該当する生徒はいません");
 			}else {
+				System.out.println("------------------------------------------------------------------------------------");
+				System.out.printf("%-10s%-10s%-5s%-10s%-20s%-20s%-5s\n", "id", "name", "age", "address", "createdate", "deletedate","delflg");
+				System.out.println("------------------------------------------------------------------------------------");
 				do {
-					System.out.print(rs.getString("id") + " ");
-					System.out.print(rs.getString("name") + " ");
-					System.out.print(rs.getInt("age") + " ");
-					System.out.print(rs.getString("address") + " ");
-					System.out.print(rs.getString("createdat") + " ");
-					System.out.print(rs.getString("deletedat") + " ");
-					System.out.println(rs.getInt("delflg") + " ");
+	            	System.out.printf("%-10s", rs.getString("id"));
+	            	System.out.printf("%-10s", rs.getString("name"));
+	            	System.out.printf("%-5d", rs.getInt("age"));
+	            	System.out.printf("%-10s", rs.getString("address"));
+	            	System.out.printf("%-20s", rs.getString("createdate"));
+	            	System.out.printf("%-20s", rs.getString("deletedate"));
+	            	System.out.printf("%-5d\n", rs.getInt("delflg"));
+	            	
+//					System.out.print(rs.getString("id") + " ");
+//					System.out.print(rs.getString("name") + " ");
+//					System.out.print(rs.getInt("age") + " ");
+//					System.out.print(rs.getString("address") + " ");
+//					System.out.print(rs.getString("createdate") + " ");
+//					System.out.print(rs.getString("deletedate") + " ");
+//					System.out.println(rs.getInt("delflg") + " ");
 				}while (rs.next());
+				System.out.println("------------------------------------------------------------------------------------");
 			}
 
         } catch (Exception e) {
