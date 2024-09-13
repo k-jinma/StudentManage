@@ -40,56 +40,64 @@ public class Main {
 
             //入力を受け付ける
             System.out.println("メニュー番号を入力してください");
-            int menu = sc.nextInt();
+            
+        	try {
 
-            //メニュー番号に応じた処理を実行
-            switch(menu){
-	            case 1:
-	            	sm.listStudent();
-	            	break;
-	            case 2:
-	            	sm.searchStudent();
-	            	break;
-                case 3:
-                    sm.addStudent();
-                    break;
-                case 4:
-					sm.updateStudent();
-					break;
-                case 5:
-                    sm.deleteStudent();
-                    break;
-                    
-				case 6:
-					sm.listTest();
-					break;
-				case 7:
-					sm.showTest();
-					break;
-                case 8:
-					sm.doTest();
-					break;
-                case 9:
-                	sm.showTestResult();
-                	break;
-                case 10:
-                	sm.updateTest();
-                	break;
-                case 11:
-                	sm.deleteTest();
-                	break;
-                	
-                case 99:
-                	System.out.println("アプリケーションを終了します");
-                	sc.close();
-                	disconnectDB();
-                	return;
-                	
-                	
-                default:
-                    System.out.println("無効な値です");
-                    break;
-            }
+				int menu = sc.nextInt();
+
+				//メニュー番号に応じた処理を実行
+				switch(menu){
+				    case 1:
+				    	sm.listStudent();
+				    	break;
+				    case 2:
+				    	sm.searchStudent();
+				    	break;
+				    case 3:
+				        sm.addStudent();
+				        break;
+				    case 4:
+						sm.updateStudent();
+						break;
+				    case 5:
+				        sm.deleteStudent();
+				        break;
+				        
+					case 6:
+						sm.listTest();
+						break;
+					case 7:
+						sm.showTest();
+						break;
+				    case 8:
+						sm.doTest();
+						break;
+				    case 9:
+				    	sm.showTestResult();
+				    	break;
+				    case 10:
+				    	sm.updateTest();
+				    	break;
+				    case 11:
+				    	sm.deleteTest();
+				    	break;
+				    	
+				    case 99:
+				    	System.out.println("アプリケーションを終了します");
+				    	sc.close();
+				    	disconnectDB();
+				    	return;
+				    	
+				    	
+				    default:
+				        System.out.println("無効な値です");
+				        break;
+				}
+			} catch (Exception e) {
+				System.err.println("無効な値です");
+				sc.nextLine();
+				continue;
+			}
         }
 
 
