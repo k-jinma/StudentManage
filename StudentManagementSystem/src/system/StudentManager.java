@@ -455,6 +455,7 @@ public class StudentManager {
 				case "4":
 					System.out.println("得点：" );
 					int score = sc.nextInt();
+					sc.nextLine();
 					
 					updataSql = "UPDATE shiken SET score = ? WHERE id = ?";
 		            pstmt = conn.prepareStatement(updataSql);

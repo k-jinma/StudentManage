@@ -41,6 +41,7 @@ public class Main {
             //入力を受け付ける
             System.out.println("メニュー番号を入力してください");
             int menu = sc.nextInt();
+            sc.nextLine();
 
             //メニュー番号に応じた処理を実行
             switch(menu){
