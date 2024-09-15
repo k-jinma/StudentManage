@@ -82,30 +82,42 @@ public class StudentManager {
         System.out.print("削除したい生徒のIDを入力してください：");
         String deleteId = sc.next();
         
-        System.out.println("削除しますか？(y/n)");
-        String flg = sc.next();
-		if (flg.equals("n")) {
-			System.out.println("削除をキャンセルしました");
-			return;
-		}
-
+        //削除対象が見つかるか
         try {
-            String sql = "UPDATE student SET delflg = 1 WHERE id = ?";
+            String sql = "SELECT * FROM student WHERE id = ? and delflg = 0";
             PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, deleteId);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("該当する生徒が見つかりませんでした");
+                return;
+            }
+        
+            System.out.println("削除しますか？(y/n)");
+            String flg = sc.next();
+            if (flg.equals("n")) {
+            	System.out.println("削除をキャンセルしました");
+            	return;
+            }
+
+            sql = "UPDATE student SET delflg = 1 WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, deleteId);
             
             
             int rowsAffected = pstmt.executeUpdate();
             
             if (rowsAffected > 0) {
-                System.out.println("生徒が削除されました");
+            	System.out.println("生徒が削除されました");
             } else {
-                System.out.println("該当する生徒が見つかりませんでした");
+            	System.out.println("該当する生徒が見つかりませんでした");
             }
+            
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("データ操作中にエラーが発生しました");
         }
-        
+                
     }
 
     //生徒の検索
