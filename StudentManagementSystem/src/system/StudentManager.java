@@ -24,12 +24,30 @@ public class StudentManager {
         
         System.out.print("IDを入力してください：");
         String id = sc.next();
+
+		if (id.length() != 6) {
+			System.err.println("IDは6桁で入力してください");
+			return;
+		}
+        
         System.out.print("名前を入力してください：");
         String name = sc.next();
+        if (name.length() >= 50) {
+			System.err.println("名前は50文字以内で入力してください");
+			return;
+        }
+        
         System.out.print("年齢を入力してください：");
         String age = sc.next();
+        if ( Integer.parseInt(age) < 0 ) {
+        	System.err.println("年齢は0以上で入力してください");
+        }
+        
         System.out.print("住所を入力してください：");
         String address = sc.next();
+        if (address.length() >= 200) {
+        	System.err.println("住所は200文字以内で入力してください");
+        }
         
         
         try {
@@ -48,11 +66,12 @@ public class StudentManager {
             } else {
                 System.out.println("生徒が追加できませんでした");
             }
+            
         } catch (SQLIntegrityConstraintViolationException e) {
             System.err.println("IDが重複しています。もう一度入力してください。");
             
         } catch (SQLException e) {
-			System.out.println("データ操作中にエラーが発生しました");
+			System.err.println("データ操作中にエラーが発生しました");
 
         }
     }
@@ -62,24 +81,43 @@ public class StudentManager {
         System.out.println("生徒の削除");
         System.out.print("削除したい生徒のIDを入力してください：");
         String deleteId = sc.next();
-
+        
+        //削除対象が見つかるか
         try {
-            String sql = "UPDATE student SET delflg = 1 WHERE id = ?";
+            String sql = "SELECT * FROM student WHERE id = ? and delflg = 0";
             PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, deleteId);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("該当する生徒が見つかりませんでした");
+                return;
+            }
+        
+            System.out.println("削除しますか？(y/n)");
+            String flg = sc.next();
+            if (flg.equals("n")) {
+            	System.out.println("削除をキャンセルしました");
+            	return;
+            }
+
+            sql = "UPDATE student SET delflg = 1 WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, deleteId);
             
             
             int rowsAffected = pstmt.executeUpdate();
             
             if (rowsAffected > 0) {
-                System.out.println("生徒が削除されました");
+            	System.out.println("生徒が削除されました");
             } else {
-                System.out.println("該当する生徒が見つかりませんでした");
+            	System.out.println("該当する生徒が見つかりませんでした");
             }
+            
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("データ操作中にエラーが発生しました");
         }
-        
+                
     }
 
     //生徒の検索
@@ -149,22 +187,24 @@ public class StudentManager {
 
         try {           
         	
-            String sql = "SELECT * FROM student WHERE delflg = 0";
+            String sql = "SELECT * FROM student";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
-            System.out.println("--------------------------------------------------------------------------");
-            System.out.printf("%-10s%-10s%-5s%-10s%-20s%-20s\n", "id", "name", "age", "address", "createdate", "deletedate");
-            System.out.println("--------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.printf("%-10s%-10s%-5s%-10s%-20s%-20s%-5s\n", "id", "name", "age", "address", "createdate", "deletedate", "delflg");
+            System.out.println("------------------------------------------------------------------------------------");
             while (rs.next()) {
             	System.out.printf("%-10s", rs.getString("id"));
             	System.out.printf("%-10s", rs.getString("name"));
             	System.out.printf("%-5d", rs.getInt("age"));
             	System.out.printf("%-10s", rs.getString("address"));
             	System.out.printf("%-20s", rs.getString("createdate"));
-            	System.out.printf("%-20s\n", rs.getString("deletedate"));
+            	System.out.printf("%-20s", rs.getString("deletedate"));
+            	System.out.printf("%5s\n", rs.getString("delflg"));
+            	
             }
-            System.out.println("--------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -566,6 +606,20 @@ public class StudentManager {
 			System.out.print("修正id：");
 			String id = sc.nextLine();
 			
+			rs = pstmt.executeQuery(); // もう１度SQLを実行する
+			
+			boolean hit = false;
+			while( rs.next() ) {
+				if( rs.getString("id").equals(id) ) {
+                    hit = true;
+					break;
+				} 
+			}
+			if (hit == false) {
+				System.err.println("そのIDはありません");
+				return;
+			}
+			
 			System.out.println("修正項目");
 			System.out.println("1.id(学生番号)");
 			System.out.println("2.氏名");
@@ -738,11 +792,11 @@ public class StudentManager {
         String testName = sc.nextLine();
         
         System.out.print("試験No->");
-        int testNo = sc.nextInt();
-        sc.nextLine();
+        String input = sc.nextLine();
         
 
         try {           
+        	int testNo = Integer.parseInt(input);
         	
         	String sql = "select * from shiken where subject_name = ? and subject_no = ?";
             PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql);
@@ -765,6 +819,10 @@ public class StudentManager {
             System.out.println("----------------------------------------------------------------");
 
             
+        } catch (NumberFormatException e) {
+        	System.err.println("数字を入力してください");
+        	return;
+        
         } catch (Exception e) {
             e.printStackTrace();
         }
