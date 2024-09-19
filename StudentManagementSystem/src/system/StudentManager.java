@@ -41,12 +41,14 @@ public class StudentManager {
         String age = sc.next();
         if ( Integer.parseInt(age) < 0 ) {
         	System.err.println("年齢は0以上で入力してください");
+        	return;
         }
         
         System.out.print("住所を入力してください：");
         String address = sc.next();
         if (address.length() >= 200) {
         	System.err.println("住所は200文字以内で入力してください");
+        	return;
         }
         
         
