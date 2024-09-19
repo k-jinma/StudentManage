@@ -14,7 +14,22 @@ public class Main {
 	static final String password = "root";
 	static String dbName = "testdb";
 
+	static final String loginPassword = "abcd";
+	
 	public static void main(String[] args) {
+		
+		
+		//ログイン
+		System.out.println("==========試験システム==========");
+		
+		String inputPassword;
+		do {
+			System.out.print("パスワード: ");
+			inputPassword = sc.nextLine();
+			
+		}while( !inputPassword.equals(loginPassword) );
+		
+		System.out.println("==========ログイン成功==========");
 
         //MySQLに接続する
         connectDB();
@@ -23,18 +38,18 @@ public class Main {
         
         while (true) {
             //生徒管理システムのメニューを表示
-        	System.out.println("1.生徒の一覧表示"); // ○
-        	System.out.println("2.生徒の検索"); // ○
-            System.out.println("3.生徒の追加"); // ○
-            System.out.println("4.生徒の修正"); // 〇
-            System.out.println("5.生徒の削除");	// ○
-            
-            System.out.println("6.テスト一覧表示"); // 〇
-            System.out.println("7.テストの検索"); // 〇
-            System.out.println("8.テストの実施"); // ○
-            System.out.println("9.テスト結果を表示"); // ○
-            System.out.println("10.テストを修正する"); // 〇
-            System.out.println("11.テストを削除する"); // ○
+        	System.out.println("1.生徒の一覧表示");
+        	System.out.println("2.生徒の検索");
+            System.out.println("3.生徒の追加");
+            System.out.println("4.生徒の修正"); 
+            System.out.println("5.生徒の削除");	
+          
+            System.out.println("6.テスト一覧表示"); 
+            System.out.println("7.テストの検索"); 
+            System.out.println("8.テストの実施"); 
+            System.out.println("9.テスト結果を表示"); 
+            System.out.println("10.テストを修正する"); // 削除時など表示を修正
+            System.out.println("11.テストを削除する"); 
             
             System.out.println("99.終了");
 
@@ -44,7 +59,8 @@ public class Main {
         	try {
 
 				int menu = sc.nextInt();
-
+				sc.nextLine();
+				
 				//メニュー番号に応じた処理を実行
 				switch(menu){
 				    case 1:
