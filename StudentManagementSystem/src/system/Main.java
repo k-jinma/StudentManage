@@ -10,11 +10,11 @@ public class Main {
 	static Connection conn;
 	static Scanner sc = new Scanner(System.in);
 	
-	static final String userName = "root";
-	static final String password = "root";
-	static String dbName = "testdb";
+	static final String userName = "root";	//DBユーザー名
+	static final String password = "root";	//DBパスワード
+	static String dbName = "testdb";	//DB名
 
-	static final String loginPassword = "abcd";
+	static final String loginPassword = "abcd";	//システムログインパスワード
 	
 	public static void main(String[] args) {
 		
@@ -63,42 +63,42 @@ public class Main {
 				
 				//メニュー番号に応じた処理を実行
 				switch(menu){
-				    case 1:
+				    case 1:	//生徒の一覧表示
 				    	sm.listStudent();
 				    	break;
-				    case 2:
+				    case 2: //生徒の検索
 				    	sm.searchStudent();
 				    	break;
-				    case 3:
+				    case 3: //生徒の追加
 				        sm.addStudent();
 				        break;
-				    case 4:
+				    case 4: //生徒の修正
 						sm.updateStudent();
 						break;
-				    case 5:
+				    case 5: //生徒の削除
 				        sm.deleteStudent();
 				        break;
 				        
-					case 6:
+					case 6: //テスト一覧表示
 						sm.listTest();
 						break;
-					case 7:
+					case 7: //テストの検索
 						sm.showTest();
 						break;
-				    case 8:
+				    case 8: //テストの実施
 						sm.doTest();
 						break;
-				    case 9:
+				    case 9: //テスト結果を表示
 				    	sm.showTestResult();
 				    	break;
-				    case 10:
+				    case 10: //テストを修正する
 				    	sm.updateTest();
 				    	break;
-				    case 11:
+				    case 11: //テストを削除する
 				    	sm.deleteTest();
 				    	break;
 				    	
-				    case 99:
+				    case 99: //終了
 				    	System.out.println("アプリケーションを終了します");
 				    	sc.close();
 				    	disconnectDB();
@@ -128,13 +128,10 @@ public class Main {
 			String url = "jdbc:mysql://localhost:3306/" + dbName;
 			conn = DriverManager.getConnection(url, userName, password);
 			
-		} catch (ClassNotFoundException e) {
-			//エラーが起きた時の処理
-			
-			
-		} catch (SQLException e) {
-			//エラーが起きた時の処理
-			
+		} catch (Exception e) {
+			System.err.println("データベース接続中にエラーが発生しました");
+			System.err.println("システムを終了します");
+			System.exit(0);
 		}
     }
     
@@ -144,8 +141,10 @@ public class Main {
 			conn.close();
 			
 		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			System.err.println("データベース接続に失敗しました");
+			System.err.println("システムを終了します");
+			System.exit(0);
+			
 		}
 	}
 
