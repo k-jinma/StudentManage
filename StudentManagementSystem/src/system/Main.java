@@ -129,13 +129,13 @@ public class Main {
 			conn = DriverManager.getConnection(url, userName, password);
 			
 		} catch (ClassNotFoundException e) {
-			//エラーが起きた時の処理
-			
+			System.err.println("データベース接続エラーが発生しました。システムを終了します。");
+			System.exit(0);
 			
 		} catch (SQLException e) {
-			//エラーが起きた時の処理
-			
-		}
+			System.err.println("データベース処理エラーが発生しました。システムを終了します。");
+			System.exit(0);
+		} 
     }
     
     //DBを切断する
@@ -144,9 +144,9 @@ public class Main {
 			conn.close();
 			
 		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+			System.err.println("データベース切断エラーが発生しました。システムを終了します。");
+			System.exit(0);
+		} 
 	}
 
 }

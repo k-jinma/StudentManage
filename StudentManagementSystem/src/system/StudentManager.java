@@ -85,9 +85,9 @@ public class StudentManager {
 			System.err.println("一度使用されたIDです。もう一度入力してください。");
 
 		} catch (SQLException e) {
-			System.err.println("データ操作中にエラーが発生しました");
-
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	//生徒の削除
@@ -108,7 +108,7 @@ public class StudentManager {
 				return;
 			}
 
-			System.out.println("削除しますか？(y/n)");
+			System.out.print("削除しますか？(y/n):");
 			String flg = sc.nextLine();
 			if (flg.equals("n")) {
 				System.out.println("削除をキャンセルしました");
@@ -128,8 +128,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			System.err.println("データ操作中にエラーが発生しました");
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -178,21 +179,15 @@ public class StudentManager {
 					System.out.printf("%-20s", rs.getString("deletedate"));
 					System.out.printf("%-5d\n", rs.getInt("delflg"));
 
-					//					System.out.print(rs.getString("id") + " ");
-					//					System.out.print(rs.getString("name") + " ");
-					//					System.out.print(rs.getInt("age") + " ");
-					//					System.out.print(rs.getString("address") + " ");
-					//					System.out.print(rs.getString("createdate") + " ");
-					//					System.out.print(rs.getString("deletedate") + " ");
-					//					System.out.println(rs.getInt("delflg") + " ");
 				} while (rs.next());
 				System.out.println(
 						"------------------------------------------------------------------------------------");
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -217,14 +212,13 @@ public class StudentManager {
 				System.out.printf("%-10s", rs.getString("address"));
 				System.out.printf("%-20s", rs.getString("createdate"));
 				System.out.printf("%-20s\n", rs.getString("deletedate"));
-				//            	System.out.printf("%5s\n", rs.getString("delflg"));
-
 			}
 			System.out.println("------------------------------------------------------------------------------------");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -258,9 +252,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -343,9 +337,10 @@ public class StudentManager {
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	// テストを修正する
@@ -564,8 +559,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -607,8 +603,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -765,9 +762,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	// 試験が存在するか確認する
@@ -784,8 +781,9 @@ public class StudentManager {
 				return false;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return false;
+		} 
 		return true;
 	}
 
@@ -809,18 +807,19 @@ public class StudentManager {
 			}
 			System.out.println("--------------------------------");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	//テストの検索
 	public void showTest() {
 		System.out.println("試験の検索");
-		System.out.print("試験名->");
+		System.out.print("試験名:");
 		String testName = sc.nextLine();
 
-		System.out.print("試験No->");
+		System.out.print("試験No:");
 		String input = sc.nextLine();
 
 		try {
@@ -850,9 +849,10 @@ public class StudentManager {
 			System.err.println("数字を入力してください");
 			return;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 }
