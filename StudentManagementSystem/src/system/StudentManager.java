@@ -357,16 +357,21 @@ public class StudentManager {
 		String sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no = ?";
 		PreparedStatement pstmt;
 		try {
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql, ResultSet.CONCUR_READ_ONLY);
 			pstmt.setString(1, kamoku);
 			pstmt.setString(2, no);
 
 			ResultSet rs = pstmt.executeQuery();
 
+			if (!rs.isBeforeFirst() && !rs.isAfterLast()) {
+				System.err.println("該当する試験がありません");
+				return;
+			}
+
+			System.out.println("-----------------------------------------");
+			System.out.println("id\t学生番号\t試験名 試験No 得点 実施日   ");
+			System.out.println("-----------------------------------------");
 			while (rs.next()) {
-				System.out.println("-----------------------------------------");
-				System.out.println("id\t学生番号\t試験名 試験No 得点 実施日   ");
-				System.out.println("-----------------------------------------");
 				System.out.print(rs.getInt("id"));
 				System.out.print("\t");
 				System.out.print(rs.getString("gakusei_id"));
@@ -678,7 +683,7 @@ public class StudentManager {
 
 				} catch (SQLIntegrityConstraintViolationException e) {
 					System.out.println("同じIDが存在します");
-					updateStudent();
+					break;
 				}
 
 			case "2":
@@ -742,7 +747,7 @@ public class StudentManager {
 
 				String address = sc.nextLine();
 				if (address.length() >= 200) { //文字サイズ確認
-					updateStudent();
+					break;
 				}
 
 				sql = "update student set address = ? where id = ?";
