@@ -10,9 +10,9 @@ public class Main {
 	static Connection conn;
 	static Scanner sc = new Scanner(System.in);
 	
-	static final String userName = "root";	//DBユーザー名
-	static final String password = "root";	//DBパスワード
-	static String dbName = "testdb";	//DB名
+	static final String userName = "root";
+	static final String password = "root";
+	static String dbName = "testdb";
 
 	static final String loginPassword = "abcd";	//システムログインパスワード
 	
@@ -127,10 +127,13 @@ public class Main {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/" + dbName;
 			conn = DriverManager.getConnection(url, userName, password);
+    	
+    	} catch (ClassNotFoundException e) {
+			System.err.println("データベース接続エラーが発生しました。システムを終了します。");
+			System.exit(0);	
 			
-		} catch (Exception e) {
-			System.err.println("データベース接続中にエラーが発生しました");
-			System.err.println("システムを終了します");
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。システムを終了します。");
 			System.exit(0);
 		}
     }
@@ -141,10 +144,8 @@ public class Main {
 			conn.close();
 			
 		} catch (SQLException e) {
-			System.err.println("データベース接続に失敗しました");
-			System.err.println("システムを終了します");
+			System.err.println("データベース切断エラーが発生しました。システムを終了します。");
 			System.exit(0);
-			
 		}
 	}
 

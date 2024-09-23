@@ -2,45 +2,22 @@ package beans;
 
 public class Student {
 
-    private String name;
+    private String id;
     private int age;
     private String address;
 
 
-    public Student(String name, int age, String address) {
-        this.name = name;
+    public Student(String id, int age, String address) {
+        this.id = id;
         this.age = age;
         this.address = address;
     }
 
     public void showInfo() {
-        System.out.println("名前:" + this.name);
+        System.out.println("名前:" + this.id);
         System.out.println("年齢:" + this.age);
         System.out.println("住所:" + this.address);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
 }

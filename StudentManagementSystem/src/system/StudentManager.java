@@ -87,7 +87,7 @@ public class StudentManager {
 		} catch (SQLException e) {
 			System.err.println("データ操作中にエラーが発生しました");
 
-		}
+		} 
 	}
 
 	//生徒の削除
@@ -108,7 +108,7 @@ public class StudentManager {
 				return;
 			}
 
-			System.out.println("削除しますか？(y/n)");
+			System.out.print("削除しますか？(y/n):");
 			String flg = sc.nextLine();
 			if (flg.equals("n")) {
 				System.out.println("削除をキャンセルしました");
@@ -128,8 +128,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			System.err.println("データ操作中にエラーが発生しました");
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -178,21 +179,15 @@ public class StudentManager {
 					System.out.printf("%-20s", rs.getString("deletedate"));
 					System.out.printf("%-5d\n", rs.getInt("delflg"));
 
-					//					System.out.print(rs.getString("id") + " ");
-					//					System.out.print(rs.getString("name") + " ");
-					//					System.out.print(rs.getInt("age") + " ");
-					//					System.out.print(rs.getString("address") + " ");
-					//					System.out.print(rs.getString("createdate") + " ");
-					//					System.out.print(rs.getString("deletedate") + " ");
-					//					System.out.println(rs.getInt("delflg") + " ");
 				} while (rs.next());
 				System.out.println(
 						"------------------------------------------------------------------------------------");
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -217,14 +212,13 @@ public class StudentManager {
 				System.out.printf("%-10s", rs.getString("address"));
 				System.out.printf("%-20s", rs.getString("createdate"));
 				System.out.printf("%-20s\n", rs.getString("deletedate"));
-				//            	System.out.printf("%5s\n", rs.getString("delflg"));
-
 			}
 			System.out.println("------------------------------------------------------------------------------------");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -249,18 +243,46 @@ public class StudentManager {
 			if (!rs.next()) {
 				System.out.println("該当する試験はありません");
 			} else {
+				System.out.println("-----------------------------------------");
 				System.out.println("実施日：" + rs.getString("test_date"));
-				System.out.println("学生No\t点数");
+				System.out.println("-----------------------------------------");
+				System.out.printf("%-10s%-5s\n", "学生No", "点数");
+				System.out.println("-----------------------------------------");
 				do {
-					System.out.print(rs.getString("gakusei_id") + " ");
-					System.out.println(rs.getString("score") + " ");
+					System.out.printf("%-12s", rs.getString("gakusei_id"));
+					System.out.printf("%-5s\n", rs.getString("score"));
 				} while (rs.next());
+				System.out.println("-----------------------------------------");
+			
+				//平均点、最高点、最低点を表示する
+				sql = "SELECT AVG(score) AS average_score, MAX(score) AS max_score, MIN(score) AS min_score FROM shiken WHERE subject_name = ? AND subject_no = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, testName);
+				pstmt.setString(2, testNo);
+				
+				rs = pstmt.executeQuery();
+				
+				System.out.println("-----------------------------------------");
+				System.out.printf("%-5s%-5s%-5s\n", "平均点", "最高点", "最低点");
+				System.out.println("-----------------------------------------");
+				do {
+					rs.next();
+					System.out.printf("%7d", rs.getInt("average_score"));
+					System.out.printf("%7s", rs.getString("max_score"));
+					System.out.printf("%7s\n", rs.getString("min_score"));
+				} while (rs.next());
+				System.out.println("-----------------------------------------");				
+				
+			
 			}
+			
+			
 
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -343,9 +365,10 @@ public class StudentManager {
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	// テストを修正する
@@ -362,16 +385,21 @@ public class StudentManager {
 		String sql = "SELECT * FROM shiken WHERE subject_name = ? AND subject_no = ?";
 		PreparedStatement pstmt;
 		try {
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql, ResultSet.CONCUR_READ_ONLY);
 			pstmt.setString(1, kamoku);
 			pstmt.setString(2, no);
 
 			ResultSet rs = pstmt.executeQuery();
 
+			if (!rs.isBeforeFirst() && !rs.isAfterLast()) {
+				System.err.println("該当する試験がありません");
+				return;
+			}
+
+			System.out.println("-----------------------------------------");
+			System.out.println("id\t学生番号\t試験名 試験No 得点 実施日   ");
+			System.out.println("-----------------------------------------");
 			while (rs.next()) {
-				System.out.println("-----------------------------------------");
-				System.out.println("id\t学生番号\t試験名 試験No 得点 実施日   ");
-				System.out.println("-----------------------------------------");
 				System.out.print(rs.getInt("id"));
 				System.out.print("\t");
 				System.out.print(rs.getString("gakusei_id"));
@@ -564,8 +592,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -607,8 +636,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 
 	}
 
@@ -681,7 +711,7 @@ public class StudentManager {
 
 				} catch (SQLIntegrityConstraintViolationException e) {
 					System.out.println("同じIDが存在します");
-					updateStudent();
+					break;
 				}
 
 			case "2":
@@ -745,7 +775,7 @@ public class StudentManager {
 
 				String address = sc.nextLine();
 				if (address.length() >= 200) { //文字サイズ確認
-					updateStudent();
+					break;
 				}
 
 				sql = "update student set address = ? where id = ?";
@@ -765,9 +795,9 @@ public class StudentManager {
 			}
 
 		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	// 試験が存在するか確認する
@@ -784,8 +814,9 @@ public class StudentManager {
 				return false;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return false;
+		} 
 		return true;
 	}
 
@@ -809,18 +840,19 @@ public class StudentManager {
 			}
 			System.out.println("--------------------------------");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 	//テストの検索
 	public void showTest() {
 		System.out.println("試験の検索");
-		System.out.print("試験名->");
+		System.out.print("試験名:");
 		String testName = sc.nextLine();
 
-		System.out.print("試験No->");
+		System.out.print("試験No:");
 		String input = sc.nextLine();
 
 		try {
@@ -850,9 +882,10 @@ public class StudentManager {
 			System.err.println("数字を入力してください");
 			return;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
+			return;
+		} 
 	}
 
 }
