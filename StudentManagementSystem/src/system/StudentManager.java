@@ -243,15 +243,43 @@ public class StudentManager {
 			if (!rs.next()) {
 				System.out.println("該当する試験はありません");
 			} else {
+				System.out.println("-----------------------------------------");
 				System.out.println("実施日：" + rs.getString("test_date"));
-				System.out.println("学生No\t点数");
+				System.out.println("-----------------------------------------");
+				System.out.printf("%-10s%-5s\n", "学生No", "点数");
+				System.out.println("-----------------------------------------");
 				do {
-					System.out.print(rs.getString("gakusei_id") + " ");
-					System.out.println(rs.getString("score") + " ");
+					System.out.printf("%-12s", rs.getString("gakusei_id"));
+					System.out.printf("%-5s\n", rs.getString("score"));
 				} while (rs.next());
+				System.out.println("-----------------------------------------");
+			
+				//平均点、最高点、最低点を表示する
+				sql = "SELECT AVG(score) AS average_score, MAX(score) AS max_score, MIN(score) AS min_score FROM shiken WHERE subject_name = ? AND subject_no = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, testName);
+				pstmt.setString(2, testNo);
+				
+				rs = pstmt.executeQuery();
+				
+				System.out.println("-----------------------------------------");
+				System.out.printf("%-5s%-5s%-5s\n", "平均点", "最高点", "最低点");
+				System.out.println("-----------------------------------------");
+				do {
+					rs.next();
+					System.out.printf("%7d", rs.getInt("average_score"));
+					System.out.printf("%7s", rs.getString("max_score"));
+					System.out.printf("%7s\n", rs.getString("min_score"));
+				} while (rs.next());
+				System.out.println("-----------------------------------------");				
+				
+			
 			}
+			
+			
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.err.println("データベース処理エラーが発生しました。処理をやり直してください。");
 			return;
 		} 
