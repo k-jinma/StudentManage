@@ -866,15 +866,15 @@ public class StudentManager {
 			ResultSet rs = pstmt.executeQuery();
 
 			System.out.println("----------------------------------------------------------------");
-			System.out.println("id\tgakusei_id\tsubject_name\tsubject_no\tscore\ttest_date");
+			System.out.printf("%-3s%-12s%-15s%-15s%-7s%-10s\n","id","gakusei_id","subject_name","subject_no","score","test_date");
 			System.out.println("----------------------------------------------------------------");
 			while (rs.next()) {
-				System.out.print(rs.getString("id") + "\t");
-				System.out.print(rs.getString("gakusei_id") + "\t");
-				System.out.print(rs.getString("subject_name") + "\t");
-				System.out.print(rs.getInt("subject_no") + "\t");
-				System.out.print(rs.getInt("score") + "\t");
-				System.out.println(rs.getString("test_date") + "\t");
+				System.out.printf("%3s",rs.getString("id") );
+				System.out.printf("%12s",rs.getString("gakusei_id"));
+				System.out.printf("%12s",rs.getString("subject_name") );
+				System.out.printf("%12d",rs.getInt("subject_no") );
+				System.out.printf("%8d",rs.getInt("score") );
+				System.out.printf("%15s\n",rs.getString("test_date") );
 			}
 			System.out.println("----------------------------------------------------------------");
 
